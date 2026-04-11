@@ -4,6 +4,6 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://paygate-api.onrender.com"
+    "NEXT_PUBLIC_API_URL": "https://paygate-api.fly.dev"
   }
 }
