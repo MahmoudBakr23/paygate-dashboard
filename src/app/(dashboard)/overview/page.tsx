@@ -16,8 +16,7 @@ async function getDashboardData(token: string) {
 
 async function getRecentCharges(token: string) {
   try {
-    const { charges } = await api.charges.list(token, { per_page: "5" });
-    return charges;
+    return await api.charges.list(token);
   } catch {
     return [];
   }
@@ -46,12 +45,12 @@ export default async function OverviewPage() {
     },
     {
       title: "Successful",
-      value: stats?.successful_charges?.toLocaleString() ?? "—",
+      value: stats?.captured_count?.toLocaleString() ?? "—",
       icon: CheckCircle,
     },
     {
       title: "Success Rate",
-      value: stats ? `${(stats.success_rate * 100).toFixed(1)}%` : "—",
+      value: stats ? `${stats.success_rate.toFixed(1)}%` : "—",
       icon: XCircle,
     },
   ];

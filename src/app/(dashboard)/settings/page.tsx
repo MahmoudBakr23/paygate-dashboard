@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { api } from "@/lib/api";
+import { api, type Merchant } from "@/lib/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -10,10 +10,9 @@ export default async function SettingsPage() {
   const token = jar.get("paygate_token")?.value;
   if (!token) redirect("/login");
 
-  let merchant: Awaited<ReturnType<typeof api.me.get>>["merchant"] | null = null;
+  let merchant: Merchant | null = null;
   try {
-    const data = await api.me.get(token);
-    merchant = data.merchant;
+    merchant = await api.me.get(token);
   } catch {
     // show empty state
   }

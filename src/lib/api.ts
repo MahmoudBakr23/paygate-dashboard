@@ -39,20 +39,20 @@ export const api = {
         body: JSON.stringify({ email, password }),
       }),
     register: (name: string, email: string, password: string) =>
-      request<{ token: string; merchant: Merchant }>("/v1/auth/register", {
+      request<{ token: string; merchant: Merchant; api_keys: { public_key: string; secret_key: string } }>("/v1/auth/register", {
         method: "POST",
-        body: JSON.stringify({ merchant: { name, email, password } }),
+        body: JSON.stringify({ name, email, password }),
       }),
     logout: (token: string) =>
       request("/v1/auth/logout", { method: "DELETE", token }),
   },
 
   me: {
-    get: (token: string) => request<{ merchant: Merchant }>("/v1/me", { token }),
+    get: (token: string) => request<Merchant>("/v1/me", { token }),
     update: (token: string, data: Partial<Merchant>) =>
-      request<{ merchant: Merchant }>("/v1/me", {
+      request<Merchant>("/v1/me", {
         method: "PATCH",
-        body: JSON.stringify({ merchant: data }),
+        body: JSON.stringify(data),
         token,
       }),
     dashboard: (token: string) =>
@@ -61,7 +61,7 @@ export const api = {
 
   apiKeys: {
     list: (token: string) =>
-      request<{ api_keys: ApiKey[] }>("/v1/me/api_keys", { token }),
+      request<ApiKey[]>("/v1/me/api_keys", { token }),
     create: (token: string) =>
       request<ApiKeyCreated>("/v1/me/api_keys", { method: "POST", token }),
     revoke: (token: string, id: string) =>
@@ -71,35 +71,32 @@ export const api = {
   charges: {
     list: (token: string, params?: Record<string, string>) => {
       const qs = params ? `?${new URLSearchParams(params)}` : "";
-      return request<{ charges: Charge[]; meta: PaginationMeta }>(
-        `/v1/charges${qs}`,
-        { token }
-      );
+      return request<Charge[]>(`/v1/charges${qs}`, { token });
     },
     get: (token: string, id: string) =>
-      request<{ charge: Charge }>(`/v1/charges/${id}`, { token }),
+      request<Charge>(`/v1/charges/${id}`, { token }),
   },
 
   refunds: {
     list: (token: string, chargeId: string) =>
-      request<{ refunds: Refund[] }>(`/v1/charges/${chargeId}/refunds`, { token }),
+      request<Refund[]>(`/v1/charges/${chargeId}/refunds`, { token }),
     get: (token: string, id: string) =>
-      request<{ refund: Refund }>(`/v1/refunds/${id}`, { token }),
+      request<Refund>(`/v1/refunds/${id}`, { token }),
   },
 
   webhooks: {
     list: (token: string) =>
-      request<{ webhook_endpoints: WebhookEndpoint[] }>("/v1/me/webhook_endpoints", { token }),
+      request<WebhookEndpoint[]>("/v1/me/webhook_endpoints", { token }),
     create: (token: string, data: { url: string; events: string[] }) =>
       request<WebhookEndpointCreated>("/v1/me/webhook_endpoints", {
         method: "POST",
-        body: JSON.stringify({ webhook_endpoint: data }),
+        body: JSON.stringify(data),
         token,
       }),
     update: (token: string, id: string, data: { events: string[] }) =>
-      request<{ webhook_endpoint: WebhookEndpoint }>(`/v1/me/webhook_endpoints/${id}`, {
+      request<WebhookEndpoint>(`/v1/me/webhook_endpoints/${id}`, {
         method: "PATCH",
-        body: JSON.stringify({ webhook_endpoint: data }),
+        body: JSON.stringify(data),
         token,
       }),
     delete: (token: string, id: string) =>
@@ -166,22 +163,18 @@ export interface WebhookEndpoint {
   created_at: string;
 }
 
-export interface WebhookEndpointCreated extends WebhookEndpoint {
+export interface WebhookEndpointCreated {
+  webhook_endpoint: WebhookEndpoint;
   webhook_secret: string;
 }
 
 export interface DashboardStats {
   total_volume: number;
+  currency: string;
   total_charges: number;
-  successful_charges: number;
-  failed_charges: number;
+  captured_count: number;
+  failed_count: number;
+  refunded_count: number;
   success_rate: number;
   volume_by_method: Record<string, number>;
-}
-
-export interface PaginationMeta {
-  current_page: number;
-  total_pages: number;
-  total_count: number;
-  per_page: number;
 }

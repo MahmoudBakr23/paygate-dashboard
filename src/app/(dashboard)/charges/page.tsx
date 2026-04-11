@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { api } from "@/lib/api";
+import { api, type Charge } from "@/lib/api";
 import { formatAmount, formatDate } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,10 +20,9 @@ export default async function ChargesPage() {
   const token = jar.get("paygate_token")?.value;
   if (!token) redirect("/login");
 
-  let charges: Awaited<ReturnType<typeof api.charges.list>>["charges"] = [];
+  let charges: Charge[] = [];
   try {
-    const data = await api.charges.list(token, { per_page: "50" });
-    charges = data.charges;
+    charges = await api.charges.list(token);
   } catch {
     // empty state
   }

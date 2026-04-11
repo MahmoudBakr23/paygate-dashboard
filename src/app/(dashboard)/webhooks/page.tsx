@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { api } from "@/lib/api";
+import { api, type WebhookEndpoint } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,10 +11,9 @@ export default async function WebhooksPage() {
   const token = jar.get("paygate_token")?.value;
   if (!token) redirect("/login");
 
-  let endpoints: Awaited<ReturnType<typeof api.webhooks.list>>["webhook_endpoints"] = [];
+  let endpoints: WebhookEndpoint[] = [];
   try {
-    const data = await api.webhooks.list(token);
-    endpoints = data.webhook_endpoints;
+    endpoints = await api.webhooks.list(token);
   } catch {
     // empty state
   }

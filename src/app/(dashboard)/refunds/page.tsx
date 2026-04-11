@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { api, type Charge } from "@/lib/api";
+import { api, type Charge, type Refund } from "@/lib/api";
 import { formatAmount, formatDate } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -10,21 +10,15 @@ export default async function RefundsPage() {
   if (!token) redirect("/login");
 
   // Fetch refunded charges then load their refunds
-  let refundRows: Array<{
-    charge: Charge;
-    refund: Awaited<ReturnType<typeof api.refunds.list>>["refunds"][0];
-  }> = [];
+  let refundRows: Array<{ charge: Charge; refund: Refund }> = [];
 
   try {
-    const { charges } = await api.charges.list(token, {
-      status: "refunded",
-      per_page: "50",
-    });
+    const charges = await api.charges.list(token, { status: "refunded" });
 
     const refundGroups = await Promise.all(
       charges.map(async (charge) => {
         try {
-          const { refunds } = await api.refunds.list(token, charge.id);
+          const refunds = await api.refunds.list(token, charge.id);
           return refunds.map((refund) => ({ charge, refund }));
         } catch {
           return [];

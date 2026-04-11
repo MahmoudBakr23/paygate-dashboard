@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { api } from "@/lib/api";
+import { api, type ApiKey } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,10 +11,9 @@ export default async function ApiKeysPage() {
   const token = jar.get("paygate_token")?.value;
   if (!token) redirect("/login");
 
-  let apiKeys: Awaited<ReturnType<typeof api.apiKeys.list>>["api_keys"] = [];
+  let apiKeys: ApiKey[] = [];
   try {
-    const data = await api.apiKeys.list(token);
-    apiKeys = data.api_keys;
+    apiKeys = await api.apiKeys.list(token);
   } catch {
     // empty state
   }
