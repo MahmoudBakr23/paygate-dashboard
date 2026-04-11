@@ -13,7 +13,7 @@ export default function LandingPage() {
           <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
             <a href="#features" className="hover:text-foreground transition-colors">Features</a>
             <a href="#payment-methods" className="hover:text-foreground transition-colors">Payment Methods</a>
-            <Link href="/docs" className="hover:text-foreground transition-colors">Docs</Link>
+            <a href="https://paygate-docs.vercel.app/docs" className="hover:text-foreground transition-colors">Docs</a>
           </nav>
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" asChild>
@@ -48,7 +48,7 @@ export default function LandingPage() {
             </Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
-            <Link href="/docs">View docs</Link>
+            <a href="https://paygate-docs.vercel.app/docs">View docs</a>
           </Button>
         </div>
       </section>
