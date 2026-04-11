@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Paygate Dashboard
 
-## Getting Started
+Merchant dashboard for [Paygate](https://github.com/MahmoudBakr23/paygate-api) — a portfolio payment gateway. Provides a landing page and a full post-login dashboard for managing charges, refunds, API keys, and webhook endpoints.
 
-First, run the development server:
+**Live:** https://paygate-dashboard.vercel.app  
+**API:** https://paygate-api.fly.dev  
+**Docs:** https://paygate-docs.vercel.app
+
+---
+
+## What's included
+
+**Landing page**
+- Hero section with MENA payment gateway positioning
+- Supported payment methods (Visa, Mastercard, Mada, Apple Pay)
+- Feature grid and CTA to register
+
+**Dashboard (authenticated)**
+- Overview — volume stats, success rate, volume-by-method bar chart (Recharts)
+- Charges — filterable table with status badges
+- Refunds — refund list per charge
+- API Keys — list active keys, generate new pair (secret shown once with copy button), revoke
+- Webhooks — register endpoints with event selector, view existing endpoints
+- Settings — account info from `/v1/me`
+
+---
+
+## Stack
+
+| | |
+|-|-|
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 + shadcn/ui |
+| Charts | Recharts |
+| Auth | JWT stored in httpOnly cookie via API route handler |
+| Deployment | Vercel |
+
+---
+
+## Local Setup
+
+**Requirements:** Node.js 20+
+
+```bash
+git clone https://github.com/MahmoudBakr23/paygate-dashboard
+cd paygate-dashboard
+
+npm install
+```
+
+Create `.env.local`:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3001 (or whatever port Next.js assigns — the API defaults to port 3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+For auth to work locally, start `paygate-api` first.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Build
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+npm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment (Vercel)
 
-## Deploy on Vercel
+CI deploys automatically on push to `dev` via `.github/workflows/ci.yml`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Environment variable set in `vercel.json`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+NEXT_PUBLIC_API_URL=https://paygate-api.fly.dev
+```

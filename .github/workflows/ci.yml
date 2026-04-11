@@ -28,3 +28,25 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Deploy to Vercel
+        run: vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
+        env:
+          VERCEL_ORG_ID: team_XG19yFjwhPj61Ur1StVEitxv
+          VERCEL_PROJECT_ID: prj_4RSlu038OlRycjLhkBiCu3fxxDUh
