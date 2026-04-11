@@ -39,7 +39,7 @@ export const api = {
         body: JSON.stringify({ email, password }),
       }),
     register: (name: string, email: string, password: string) =>
-      request<{ token: string; merchant: Merchant; api_keys: { public_key: string; secret_key: string } }>("/v1/auth/register", {
+      request<{ token: string; merchant: Merchant }>("/v1/auth/register", {
         method: "POST",
         body: JSON.stringify({ name, email, password }),
       }),
