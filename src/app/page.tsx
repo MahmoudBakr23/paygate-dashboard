@@ -98,7 +98,7 @@ export default function LandingPage() {
               {
                 icon: Zap,
                 title: "Async webhook delivery",
-                desc: "Outbound webhooks are dispatched via Sidekiq with exponential backoff (1m → 5m → 30m → 2h → 24h) and HMAC-SHA256 signatures.",
+                desc: "Outbound webhooks are dispatched via Sidekiq with exponential backoff (5m → 30m → 2h → 24h) across 5 attempts, signed with HMAC-SHA256.",
               },
               {
                 icon: Globe,
