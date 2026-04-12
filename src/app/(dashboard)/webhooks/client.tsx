@@ -9,13 +9,14 @@ import { api, type WebhookEndpointCreated, ApiError } from "@/lib/api";
 import { Plus, Copy, Check } from "lucide-react";
 
 const AVAILABLE_EVENTS = [
-  "charge.created",
+  "charge.pending",
+  "charge.authorized",
   "charge.captured",
   "charge.failed",
   "charge.voided",
-  "charge.refunded",
   "refund.created",
   "refund.succeeded",
+  "refund.failed",
 ];
 
 export function WebhooksClient({ token }: { token: string }) {
